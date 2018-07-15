@@ -179,13 +179,15 @@ It comprises the following access permissions –
 }
 ```
 ## AWS Lambda Role to access DynamoDB
+
 For the beginning user who has little experience with IAM role, the Kinesis Firehose role can comprise six permissions policies to work with –  
-a.	AWSLambdaFullAccess – AWS managed policy
-b.	AmazonDynamoDBFullAccess – AWS managed policy
-c.	AWSLambdaDynamoDBExecutionRole – AWS managed policy
-d.	AWSLambdaBasicExecutionRole – AWS managed policy
-e.	AWSLambdaInvocation-DynamoDB – AWS managed policy
-f.	awsDynamoDBAccessRole – Managed policy
+
+*	AWSLambdaFullAccess – AWS managed policy
+*	AmazonDynamoDBFullAccess – AWS managed policy
+*	AWSLambdaDynamoDBExecutionRole – AWS managed policy
+*	AWSLambdaBasicExecutionRole – AWS managed policy
+*	AWSLambdaInvocation-DynamoDB – AWS managed policy
+*	awsDynamoDBAccessRole – Managed policy
  
 
 The managed policy `awsDynamoDBAccessRole` comprises the following access permissions –
