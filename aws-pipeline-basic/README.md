@@ -20,11 +20,11 @@ Since the showcased input JSON event is
 
 we create a table `Likes_Tab`, chose Partition key as `element_class` (Type: String), no Sort Key and probably with no indexes since that incurs price. See [Pricing on indexes][https://aws.amazon.com/dynamodb/pricing/].
 
-![Alt text](/images/db_ss.jpg?raw=true "DynamoDB snapshot")
+![Alt text](/aws-pipeline-basic/images/db_ss.jpg?raw=true "DynamoDB snapshot")
 
 You must stream-enable the DynamoDB table and below is the screenshot of the overview 
 
-![Alt text](/images/tab_ovw.jpg?raw=true "DynamoDB table overview")
+![Alt text](/aws-pipeline-basic/images/tab_ovw.jpg?raw=true "DynamoDB table overview")
 
 
 2.	Create an S3 bucket meant to be destination for the firehose delivery stream.
@@ -34,7 +34,7 @@ Don’t set any properties like Versioning, Server access logging, Tags, Object-
 Neither grant any public read access permission nor any S3 Delivery group write access on this bucket. 
 Grant no read, write permissions to any AWS Accounts but the bucket owner.
 
-![Alt text](/images/S3_bucket.jpg?raw=true "S3 bucket")
+![Alt text](/aws-pipeline-basic/images/S3_bucket.jpg?raw=true "S3 bucket")
 
 
 3.	Download ZIP or clone the repository in a local directory. Extract the ZIP and add the folder ‘lambda_KFH_2_DynDB.py’ with its all contents to a separate deployment ZIP package (e.g. ‘lambda_KFH_2_DynDB.zip’) to be uploaded into AWS Lambda function
@@ -43,7 +43,7 @@ To find how to manually create the deployment ZIP package, please check [here][h
 
 4.	In the AWS Lambda screen, create a Lambda function (e.g. `lambda_KFH_to_DynoDB`) and upload the deployment package ZIP (e.g. ‘lambda_KFH_2_DynDB.zip’).
 
-![Alt text](/images/lambda_1.jpg?raw=true "Lambda upload zip")
+![Alt text](/aws-pipeline-basic/images/lambda_1.jpg?raw=true "Lambda upload zip")
 
 
 
@@ -52,7 +52,7 @@ You can test the functionality of the uploaded deployment package by creating an
 "data": "{\"element_class\":\"1001\"}"
 ```
 
-![Alt text](/images/test_evnt.jpg?raw=true "Configure test event")
+![Alt text](/aws-pipeline-basic/images/test_evnt.jpg?raw=true "Configure test event")
 
 
 Note: Please remember to change the table name in the Python AWS Lambda function to the DynamoDB table that you have created. Because by default, the lambda function writes to a DynamoDB table named `Likes_Tab` as per shown example.
@@ -60,7 +60,7 @@ Note: Please remember to change the table name in the Python AWS Lambda function
 
 5.	Create a Firehose delivery stream with source specified as `Direct PUT and other sources` and destination as the S3 bucket created in Step 2. You can optionally specify a prefix for S3 destination like we have chosen `kinesis_firehose_input`. Also, specify the lambda function you created (e.g. `lambda_KFH_to_DynoDB`) in Step 4 as Record transformation for the delivery stream.
 
-![Alt text](/images/firehose_dlv_strm_1.jpg?raw=true "Firehose delivery stream - record transformation") 
+![Alt text](/aws-pipeline-basic/images/firehose_dlv_strm_1.jpg?raw=true "Firehose delivery stream - record transformation") 
 
 We used runtime Python2.7 for execution of the AWS Lambda function. 
 Buffer conditions is either 3MB or 60 seconds whichever is earlier for writing to S3.
@@ -69,13 +69,13 @@ Record format conversion or Source S3 backup are disabled as they also incur pri
 CloudWatch error logging is enabled by default.
 The IAM role created for the Firehose delivery stream is `kinesisfullaccess`. More on roles / permissions, see IAM Roles and Policies section.
 
-![Alt text](/images/firehose_dlv_strm_2.jpg?raw=true "Firehose delivery stream - details")
+![Alt text](/aws-pipeline-basic/images/firehose_dlv_strm_2.jpg?raw=true "Firehose delivery stream - details")
  
 6.	For generating Firehose events, AWS CLI Put-Record utility is used. 
 
 Need to configure the AWS CLI to authenticate using the AWS Account you want to use. Specify respectively Access Key ID, Secret Access Key, region name as well as the output format. 
 
-![Alt text](/images/aws_access.jpg?raw=true "AWS CLI Access") 
+![Alt text](/aws-pipeline-basic/images/aws_access.jpg?raw=true "AWS CLI Access") 
 
 From the directory where AWS CLI is installed, run the command 
 ```
@@ -83,7 +83,7 @@ c:\Program Files\Amazon\AWSCLI>aws firehose put-record --delivery-stream-name <y
 ```
 Below is the screenshot of the RecordId returned by firehose with the binary encoded response after successful posting of event into the delivery stream.
 
-![Alt text](/images/aws_put_rec.jpg?raw=true "AWS CLI Put-Record") 
+![Alt text](/aws-pipeline-basic/images/aws_put_rec.jpg?raw=true "AWS CLI Put-Record") 
 
 The data file `likes_data_single.json` contains a single line with the below content:
 ```
@@ -106,7 +106,7 @@ For the beginning user who has little experience with IAM roles and policies, th
 * AmazonKinesisFirehoseFullAccess – AWS managed policy
 * oneClick_firehose_delivery_role_XXXXXXXXXXXXX – Inline policy
 
-![Alt text](/images/kinesis_role_summ.jpg?raw=true "Kinesis Role Summary") 
+![Alt text](/aws-pipeline-basic/images/kinesis_role_summ.jpg?raw=true "Kinesis Role Summary") 
 
 The inline policy `oneClick_firehose_delivery_role_XXXXXXXXXXXXX` is an IAM role created to read schema from Glue table, read/write/list from S3 bucket, invoke/access the lambda function, writing firehose logs to delivery stream log group via CloudWatch, access to kinesis/firehose streams and kms encrypt/decrypt. 
 It comprises the following access permissions –
@@ -200,7 +200,7 @@ For the beginning user who has little experience with IAM role, the Kinesis Fire
 *	AWSLambdaInvocation-DynamoDB – AWS managed policy
 *	awsDynamoDBAccessRole – Managed policy
 
-![Alt text](/images/lambda_role_summ.jpg?raw=true "Lambda Role Summary")
+![Alt text](/aws-pipeline-basic/images/lambda_role_summ.jpg?raw=true "Lambda Role Summary")
 
 The managed policy `awsDynamoDBAccessRole` comprises the following access permissions –
 ```
@@ -235,20 +235,20 @@ The managed policy `awsDynamoDBAccessRole` comprises the following access permis
 The permissions policy of `awsDynamoDBAccessRole` is created from the Access Control tab of the DynamoDB table `Likes_Tab` with all action attributes and using login with Amazon AWS account. Copy the text to create a new policy and attach to the role. 
 Below is the screenshot from DynamoDB `Likes_Tab` table Access Control.
  
-![Alt text](/images/dynodb_access_policy.jpg?raw=true "DynamoDB Access Control Policy")
+![Alt text](/aws-pipeline-basic/images/dynodb_access_policy.jpg?raw=true "DynamoDB Access Control Policy")
 
 
 ## Access Control List for S3 bucket
 The S3 bucket permissions comprise full read, write access for the owner AWS account. There is no access provided for other AWS accounts and no public access. The S3 bucket is not for public use but only for private access.
  
-![Alt text](/images/S3_bucket_access_policy.jpg?raw=true "S3 bucket Access Policy")
+![Alt text](/aws-pipeline-basic/images/S3_bucket_access_policy.jpg?raw=true "S3 bucket Access Policy")
 
 
 # Testing the Execution of pipeline
 Go to the Amazon S3 bucket and there should be a new folder path YYYY/MM/DD/DD created within the prefix (if any provided). In the example, we used `kinesis_firehose_input` as the prefix. Then you can download the file uploaded via AWS pipeline using the `Download` button (see red highlighted).
 It will download a file with the name format as <Kinesis Firehose delivery stream name> + <Timestamp> + <unique file identifier>
 
-![Alt text](/images/S3_bucket_file.jpg?raw=true "S3 bucket file")
+![Alt text](/aws-pipeline-basic/images/S3_bucket_file.jpg?raw=true "S3 bucket file")
 
 Note: Based on the `Buffer conditions` set under the Amazon S3 destination in the Firehose delivery stream definition, the output file may take some time to appear under the above-mentioned location in the bucket.
  In case the execution of the pipeline fails due to any reason, an error JSON with the below format will be generated and put into a `processing-failed` folder under the same bucket + prefix (if any)
@@ -260,7 +260,7 @@ processing-failed/YYYY/MM/DD/XX/<Kinesis Firehose delivery stream name> + <Times
 ```
 In parallel, a successful data entry should be visible in the `Like_Tab` DynamoDB table as shown below.
 
-![Alt text](/images/dynodb_data.jpg?raw=true "DynamoDB Data loaded")
+![Alt text](/aws-pipeline-basic/images/dynodb_data.jpg?raw=true "DynamoDB Data loaded")
 
 
 # CloudWatch Logs
@@ -268,7 +268,7 @@ The CloudWatch logs is seen with the AWS Lambda log printing the below log (see 
 The log prints the Row that is written to the DynamoDB table along with the response status once writing to the table is finished successfully. It also prints a message while writing to S3 bucket as destination.
 ## AWS Lambda Log
 
-![Alt text](/images/lambda_log.jpg?raw=true "AWS Lambda log")
+![Alt text](/aws-pipeline-basic/images/lambda_log.jpg?raw=true "AWS Lambda log")
 
 # License
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md][https://github.com/chakra1/aws/blob/aws-devel/LICENSE] file for details
