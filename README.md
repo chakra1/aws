@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 # Pre-requisites
 There are certain pre-requisites to make this project work from local or whatever deployment environment you are using.
 1.	Need an AWS account
-2.	Need to download and install AWS CLI MSI Installer for Windows from here. By default, the AWS CLI will be installed under C:\Program Files\Amazon\AWSCLI 
+2.	Need to download and install AWS CLI MSI Installer for Windows from [here][https://docs.aws.amazon.com/cli/latest/userguide/awscli-install-windows.html#install-msi-on-windows]. By default, the AWS CLI will be installed under C:\Program Files\Amazon\AWSCLI 
 3.	Need to have Python installed in the deployment environment (minimum version >= 2.7). In this example, Python 2.7.13 is used
 # Configuration / Set-up of AWS Services
 
@@ -18,7 +18,7 @@ Since the showcased input JSON event is
 "data": "{\"element_class\":\"1001\"}"
 ```
 
-we create a table `Likes_Tab`, chose Partition key as `element_class` (Type: String), no Sort Key and probably with no indexes since that incurs price. See Pricing on indexes.
+we create a table `Likes_Tab`, chose Partition key as `element_class` (Type: String), no Sort Key and probably with no indexes since that incurs price. See [Pricing on indexes][https://aws.amazon.com/dynamodb/pricing/].
 
 ![Alt text](/images/db_ss.jpg?raw=true "DynamoDB snapshot")
 
@@ -39,7 +39,7 @@ Grant no read, write permissions to any AWS Accounts but the bucket owner.
 
 3.	Download ZIP or clone the repository in a local directory. Extract the ZIP and add the folder ‘lambda_KFH_2_DynDB.py’ with its all contents to a separate deployment ZIP package (e.g. ‘lambda_KFH_2_DynDB.zip’) to be uploaded into AWS Lambda function
 
-To find how to manually create the deployment ZIP package, please check here. 
+To find how to manually create the deployment ZIP package, please check [here][https://docs.aws.amazon.com/lambda/latest/dg/lambda-python-how-to-create-deployment-package.html]. 
 
 4.	In the AWS Lambda screen, create a Lambda function (e.g. `lambda_KFH_to_DynoDB`) and upload the deployment package ZIP (e.g. ‘lambda_KFH_2_DynDB.zip’).
 
@@ -262,6 +262,7 @@ In parallel, a successful data entry should be visible in the `Like_Tab` DynamoD
 
 ![Alt text](/images/dynodb_data.jpg?raw=true "DynamoDB Data loaded")
 
+
 # CloudWatch Logs
 The CloudWatch logs is seen with the AWS Lambda log printing the below log (see red highlighted parts) once executed successfully.
 The log prints the Row that is written to the DynamoDB table along with the response status once writing to the table is finished successfully. It also prints a message while writing to S3 bucket as destination.
@@ -269,3 +270,5 @@ The log prints the Row that is written to the DynamoDB table along with the resp
 
 ![Alt text](/images/lambda_log.jpg?raw=true "AWS Lambda log")
 
+# License
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md][https://github.com/chakra1/aws/blob/aws-devel/LICENSE] file for details
