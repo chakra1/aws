@@ -83,13 +83,17 @@ Important: The data file contains a String representation of a JSON event (i.e. 
 Note: You can also enter a batch of records by adding multiple lines to the JSON file.
 
 # IAM Roles and Policies
+
 We need to create three different roles for the AWS pipeline to function without any access permission problems.
+
 ## Kinesis Firehose Role to transform and deliver data to DynamoDB through Lambda
+
 For the beginning user who has little experience with IAM roles and policies, the Kinesis Firehose role can comprise four permissions policies to work with – 
-a.	AWSLambdaFullAccess – AWS managed policy
-b.	AmazonKinesisFullAccess – AWS managed policy
-c.	AmazonKinesisFirehoseFullAccess – AWS managed policy
-d.	oneClick_firehose_delivery_role_XXXXXXXXXXXXX – Inline policy
+
+* AWSLambdaFullAccess – AWS managed policy
+* AmazonKinesisFullAccess – AWS managed policy
+* AmazonKinesisFirehoseFullAccess – AWS managed policy
+* oneClick_firehose_delivery_role_XXXXXXXXXXXXX – Inline policy
 
  
 
